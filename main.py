@@ -1,7 +1,7 @@
 import uvicorn
 
-from glm2api.app import app
-from glm2api.config import SECRET
+from app.app import app
+from app.config import SECRET
 
 if __name__ == "__main__":
     import os

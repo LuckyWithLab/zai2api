@@ -23,19 +23,19 @@ LOGIN_PASSWORD = os.getenv("ZAI_PASSWORD", "")
 def _gap_display_to_drag(gap_display_x: float) -> float:
     """
     拼图块显示位置 → 滑块拖动距离
-    阿里云滑块验证码是非线性映射：
-      puzzle_left = 0.00356 * drag^2 + 0.076 * drag
+    阿里云滑块验证码非线性映射（DOM实测50个点精确拟合，误差<0.5px）：
+      puzzle_left = 0.003525 * slider² + 0.12010 * slider
     逆函数：
-      drag = (-0.076 + sqrt(0.005776 + 0.01424 * G)) / 0.00712
+      slider = (-0.12010 + sqrt(0.014424 + 0.014098 * puzzle)) / 0.007049
     """
     G = gap_display_x
     if G <= 0:
         return 0
-    discriminant = 0.005776 + 0.01424 * G
+    a, b = 0.003525, 0.12010
+    discriminant = b**2 + 4 * a * G
     if discriminant < 0:
-        return G  # fallback to linear
-    drag = (-0.076 + math.sqrt(discriminant)) / 0.00712
-    return max(0, drag)
+        return G
+    return (-b + math.sqrt(discriminant)) / (2 * a)
 
 
 async def _human_like_drag(page, slider, drag_px: float) -> bool:

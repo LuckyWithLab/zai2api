@@ -8,3 +8,4 @@ debug_*.jpg
 result.jpg
 img_*.jpg
 test.py
+.vscode/
